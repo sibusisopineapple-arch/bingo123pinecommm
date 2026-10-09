@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>USAP Community School — Timetable & Examination Portal</title>
+  <meta name="description" content="Official USAP Community School Examination & Timetable Platform with Mobile Phone Synchronization.">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    @keyframes pulse-slow {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.9; }
+    }
+    .animate-float {
+      animation: pulse-slow 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-purple-50/50 via-white to-purple-50/20 text-slate-900 flex flex-col justify-between selection:bg-purple-200">
+
+  <!-- TOP HEADER BAR -->
+  <header class="bg-white border-b border-purple-100 py-3 px-4 shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <!-- USAP LOGO -->
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-2xl bg-purple-700 text-white flex items-center justify-center font-black text-lg shadow-md shadow-purple-700/30">
+          U
+        </div>
+        <div>
+          <div class="font-black text-sm tracking-tight text-slate-900 leading-none">USAP Community School</div>
+          <div class="text-[10px] text-purple-700 font-extrabold uppercase tracking-wider mt-0.5">Examination & Timetable System</div>
+        </div>
+      </div>
+
+      <!-- HEADER ACTIONS -->
+      <div class="flex items-center gap-2">
+        <button id="btnOpenPhonePerms" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition border bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100 shadow-sm">
+          <i data-lucide="smartphone" class="w-3.5 h-3.5 text-purple-600"></i>
+          <span class="hidden sm:inline">Device Permissions & Time</span>
+        </button>
+
+        <button id="btnToggleSound" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition border bg-purple-50 border-purple-200 text-purple-700 hover:bg-purple-100">
+          <i data-lucide="volume-2" class="w-3.5 h-3.5 text-purple-600" id="soundIcon"></i>
+          <span class="hidden sm:inline" id="soundText">Audio On</span>
+        </button>
+
+        <!-- User profile area (dynamic) -->
+        <div id="userProfileArea" class="hidden flex items-center gap-2 bg-purple-50 border border-purple-200 rounded-xl px-3 py-1.5">
+          <div class="text-right">
+            <div id="userDisplayName" class="text-xs font-bold text-slate-900 truncate max-w-[140px]">User</div>
+            <div id="userRoleBadge" class="text-[10px] text-purple-700 font-semibold">Role</div>
+          </div>
+          <button id="btnLogout" class="p-1 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition" title="Sign out">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full">
+
+    <!-- VIEW 1: AUTHENTICATION GATE (Visible when not logged in - STRICT PRIVACY) -->
+    <div id="authGateView" class="max-w-xl mx-auto my-4">
+      <div class="bg-white border border-purple-100 shadow-2xl rounded-3xl p-6 sm:p-8 relative overflow-hidden text-center">
+        
+        <!-- School Crest & Mascot -->
+        <div class="flex justify-center mb-3">
+          <div class="w-16 h-16 rounded-3xl bg-purple-700 text-white flex items-center justify-center font-black text-2xl shadow-xl shadow-purple-700/30">
+            USAP
+          </div>
+        </div>
+
+        <!-- 3D Pineapple Mascot "Pineapplemieh 🍍" -->
+        <div class="my-4 flex flex-col items-center">
+          <div class="relative w-24 h-24 flex items-center justify-center animate-float">
+            <div class="absolute inset-0 bg-yellow-400/20 rounded-full blur-xl"></div>
+            <div class="text-6xl filter drop-shadow-lg select-none">🍍</div>
+            <div class="absolute top-10 w-14 h-4 bg-slate-900/90 rounded-full border border-slate-700 shadow-md flex items-center justify-around px-1">
+              <div class="w-4 h-2.5 bg-slate-800 rounded-sm border border-slate-600"></div>
+              <div class="w-1 h-0.5 bg-slate-600"></div>
+              <div class="w-4 h-2.5 bg-slate-800 rounded-sm border border-slate-600"></div>
+            </div>
+          </div>
+          <div class="text-xs font-black text-purple-900 tracking-wide mt-1">Pineapplemieh 🍍</div>
+          <div class="text-[10px] text-purple-600 font-semibold">Official School Mascot</div>
+        </div>
+
+        <h2 class="text-2xl font-black text-slate-900 tracking-tight mb-1">
+          USAP Online Community Platform
+        </h2>
+        <p class="text-xs text-slate-500 font-medium mb-3">
+          Sign in to access school schedules, community announcements, and mobile timetable reminders
+        </p>
+
+        <!-- School Core Values -->
+        <div class="mb-5 inline-flex flex-wrap items-center justify-center gap-1.5 px-3 py-1.5 rounded-2xl bg-purple-50 border border-purple-200">
+          <span class="text-[10px] font-black text-purple-900 uppercase tracking-wider mr-1">Core Values:</span>
+          <span class="text-[11px] font-extrabold text-purple-700">Integrity</span>
+          <span class="text-purple-300">•</span>
+          <span class="text-[11px] font-extrabold text-purple-700">Curiosity</span>
+          <span class="text-purple-300">•</span>
+          <span class="text-[11px] font-extrabold text-purple-700">Equality</span>
+          <span class="text-purple-300">•</span>
+          <span class="text-[11px] font-extrabold text-purple-700">Service</span>
+          <span class="text-purple-300">•</span>
+          <span class="text-[11px] font-extrabold text-purple-700">Community</span>
+        </div>
+
+        <!-- Notification Message Banner -->
+        <div id="authAlertBanner" class="hidden p-3.5 rounded-2xl text-xs font-semibold mb-4 text-left"></div>
+
+        <!-- Role Selector Tabs -->
+        <div class="mb-4 text-left">
+          <label class="block text-xs font-bold text-slate-700 mb-1">Select Account Type</label>
+          <select id="authRoleSelect" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold focus:outline-none focus:border-purple-600">
+            <option value="STUDENT">Student</option>
+            <option value="TEACHER">Teacher</option>
+            <option value="TA">Teaching Assistant (TA)</option>
+            <option value="HEAD">Head of School / School Leadership</option>
+            <option value="CO_FOUNDER">Co-founder / School Leadership</option>
+            <option value="ESTATE">Estate Manager</option>
+            <option value="NON_FACULTY">Non Faculty</option>
+          </select>
+        </div>
+
+        <!-- Student Login Fields -->
+        <div id="studentAuthFields" class="space-y-3 text-left">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Student School Email</label>
+            <input type="email" id="studentEmailInput" placeholder="student@usapschool.org" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:outline-none focus:border-purple-600" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Class</label>
+            <select id="studentClassSelect" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold focus:outline-none focus:border-purple-600">
+              <option value="LOWER 6X">LOWER 6X</option>
+              <option value="LOWER 6Y">LOWER 6Y</option>
+              <option value="UPPER 6X">UPPER 6X</option>
+              <option value="UPPER 6Y">UPPER 6Y</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Non-Student Faculty Selector (NO EMAIL NEEDED) -->
+        <div id="facultyAuthFields" class="hidden space-y-2 text-left mb-3 bg-purple-50/70 p-3.5 rounded-2xl border border-purple-200">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-extrabold text-purple-950">Select Your Name</label>
+            <span class="text-[10px] bg-purple-200 text-purple-900 font-bold px-2 py-0.5 rounded-full">No Email Needed</span>
+          </div>
+          <select id="facultyNameSelect" class="w-full px-3.5 py-2.5 bg-white border border-purple-300 rounded-xl text-xs font-extrabold text-slate-900 focus:outline-none focus:border-purple-600">
+            <!-- Dynamically populated -->
+          </select>
+          <p class="text-[11px] text-purple-700 font-medium">Non-students select their name from the staff directory and enter their account password.</p>
+        </div>
+
+        <!-- Password Field -->
+        <div class="text-left mt-3">
+          <label class="block text-xs font-bold text-slate-700 mb-1">Password</label>
+          <input type="password" id="authPasswordInput" placeholder="Enter password" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs focus:outline-none focus:border-purple-600" />
+        </div>
+
+        <button id="btnSubmitLogin" class="w-full mt-4 py-3 bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-purple-600/30 transition active:scale-[0.99]">
+          Sign In to Access School Data
+        </button>
+
+        <button id="btnOpenStudentRegister" class="w-full mt-2 py-2.5 bg-purple-50 hover:bg-purple-100 text-purple-800 font-extrabold text-xs rounded-xl border border-purple-200 transition">
+          Create Student Account & Verify Email
+        </button>
+
+        <div class="mt-5 p-3 rounded-2xl bg-purple-50/80 border border-purple-200/60 text-[11px] text-purple-900 flex items-center justify-center gap-2">
+          <i data-lucide="shield-check" class="w-4 h-4 text-purple-600 shrink-0"></i>
+          <span>Strict Access: Timetables and schedules are only accessible after authentication.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: LOGGED IN DASHBOARD (Strictly protected) -->
+    <div id="dashboardView" class="hidden space-y-6">
+
+      <!-- Navigation Tabs -->
+      <div class="flex flex-wrap items-center gap-2 border-b border-purple-100 pb-3">
+        <button id="tabBtnTests" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-purple-600 text-white shadow-md shadow-purple-600/20">
+          <i data-lucide="book-open" class="w-4 h-4"></i>
+          Examination Schedule
+        </button>
+
+        <button id="tabBtnRules" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          Core Values & Policy
+        </button>
+
+        <button id="tabBtnAnnounce" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">
+          <i data-lucide="megaphone" class="w-4 h-4"></i>
+          Announcements
+        </button>
+
+        <button id="tabBtnRoutine" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">
+          <i data-lucide="clock" class="w-4 h-4"></i>
+          Daily Routine & Meal Times
+        </button>
+
+        <!-- STRICT AUTHORIZATION: ONLY TEACHERS AND TAs -->
+        <button id="tabBtnSchedule" class="hidden flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">
+          <i data-lucide="plus-circle" class="w-4 h-4"></i>
+          Schedule Test
+        </button>
+
+        <button id="tabBtnPeople" class="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200">
+          <i data-lucide="users" class="w-4 h-4"></i>
+          Faculty Directory
+        </button>
+      </div>
+
+      <!-- TAB PANEL 1: TESTS -->
+      <div id="panelTests" class="space-y-5">
+        <div class="bg-gradient-to-r from-purple-900 via-indigo-900 to-purple-950 text-white p-5 rounded-3xl shadow-md border border-purple-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <h2 class="text-lg font-black text-white">Live Online Examination & Test Schedule</h2>
+              <span class="text-[10px] bg-emerald-500 text-slate-950 font-black px-2 py-0.5 rounded-full uppercase tracking-wider">Live Cloud</span>
+            </div>
+            <p class="text-xs text-purple-200 mt-1 max-w-2xl font-medium">
+              Synchronized online timetable visible across all phones, tablets, and laptops.
+            </p>
+          </div>
+          <button id="btnHeaderScheduleTest" class="hidden px-4 py-2 bg-purple-500 hover:bg-purple-400 text-white font-extrabold text-xs rounded-xl shadow-md transition self-start sm:self-auto shrink-0">
+            + Schedule New Test
+          </button>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="flex flex-wrap items-center gap-2 bg-white p-3 rounded-2xl border border-purple-100 shadow-sm">
+          <span class="text-xs font-bold text-slate-400 mr-2 flex items-center gap-1">
+            <i data-lucide="filter" class="w-3.5 h-3.5 text-purple-600"></i>
+            Filter Class:
+          </span>
+          <button class="class-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-purple-600 text-white" data-class="ALL">ALL CLASSES</button>
+          <button class="class-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200" data-class="LOWER 6X">LOWER 6X</button>
+          <button class="class-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200" data-class="LOWER 6Y">LOWER 6Y</button>
+          <button class="class-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200" data-class="UPPER 6X">UPPER 6X</button>
+          <button class="class-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200" data-class="UPPER 6Y">UPPER 6Y</button>
+        </div>
+
+        <!-- Table -->
+        <div class="bg-white border border-purple-100 rounded-3xl p-6 shadow-sm overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-purple-100 text-slate-400 font-bold uppercase tracking-wider">
+                <th class="pb-3 pr-4">Test Title</th>
+                <th class="pb-3 px-4">Subject</th>
+                <th class="pb-3 px-4">Class</th>
+                <th class="pb-3 px-4">Room</th>
+                <th class="pb-3 px-4">Date & Time</th>
+                <th class="pb-3 pl-4">Supervisor</th>
+              </tr>
+            </thead>
+            <tbody id="testsTableBody" class="divide-y divide-purple-50 font-medium text-slate-700">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB PANEL: SCHOOL RULES & POLICIES -->
+      <div id="panelRules" class="hidden space-y-6 text-left">
+        <!-- Hero Banner -->
+        <div class="bg-gradient-to-r from-purple-950 via-purple-900 to-indigo-950 text-white p-6 sm:p-8 rounded-3xl shadow-md border border-purple-800">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-800/80 border border-purple-600/60 text-[10px] font-black uppercase tracking-wider text-purple-200 mb-3">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>USAP Community School — Foundation & Community Code</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-white tracking-tight">
+            School Core Values & Community Policies
+          </h2>
+          <p class="text-xs sm:text-sm text-purple-200 mt-2 leading-relaxed font-medium max-w-2xl">
+            Guided by our five pillars: <strong>Integrity, Curiosity, Equality, Service, and Community</strong>. These principles shape all academic standards, daily campus routines, and interpersonal respect.
+          </p>
+
+          <!-- 5 Core Values Pill Strip -->
+          <div class="mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 pt-4 border-t border-purple-800/60">
+            <div class="bg-white/10 border border-purple-700/50 rounded-2xl p-2.5 text-center flex flex-col items-center justify-center">
+              <i data-lucide="shield" class="w-4 h-4 text-amber-300 mb-1"></i>
+              <span class="text-xs font-black text-white">Integrity</span>
+            </div>
+            <div class="bg-white/10 border border-purple-700/50 rounded-2xl p-2.5 text-center flex flex-col items-center justify-center">
+              <i data-lucide="lightbulb" class="w-4 h-4 text-amber-300 mb-1"></i>
+              <span class="text-xs font-black text-white">Curiosity</span>
+            </div>
+            <div class="bg-white/10 border border-purple-700/50 rounded-2xl p-2.5 text-center flex flex-col items-center justify-center">
+              <i data-lucide="scale" class="w-4 h-4 text-amber-300 mb-1"></i>
+              <span class="text-xs font-black text-white">Equality</span>
+            </div>
+            <div class="bg-white/10 border border-purple-700/50 rounded-2xl p-2.5 text-center flex flex-col items-center justify-center">
+              <i data-lucide="hand-heart" class="w-4 h-4 text-amber-300 mb-1"></i>
+              <span class="text-xs font-black text-white">Service</span>
+            </div>
+            <div class="bg-white/10 border border-purple-700/50 rounded-2xl p-2.5 text-center flex flex-col items-center justify-center">
+              <i data-lucide="users" class="w-4 h-4 text-amber-300 mb-1"></i>
+              <span class="text-xs font-black text-white">Community</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5 Core Values Detailed Cards -->
+        <div class="bg-white border border-purple-100 rounded-3xl p-6 sm:p-8 shadow-sm space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-purple-100 pb-3">
+            <div>
+              <div class="text-[11px] font-extrabold text-purple-700 uppercase tracking-wider">The 5 Pillars of USAP Community School</div>
+              <h3 class="text-xl font-black text-slate-900 mt-0.5">The Five Core Values</h3>
+            </div>
+            <span class="text-xs font-bold bg-purple-50 text-purple-800 border border-purple-200 px-3 py-1 rounded-full self-start sm:self-auto">
+              Integrity • Curiosity • Equality • Service • Community
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+            <!-- Integrity -->
+            <div class="bg-purple-50/70 border border-purple-200 rounded-2xl p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <div class="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold">
+                    <i data-lucide="shield" class="w-4 h-4"></i>
+                  </div>
+                  <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-white border border-purple-200 text-purple-700">Pillar 1</span>
+                </div>
+                <h4 class="text-base font-black text-slate-900 mb-0.5">Integrity</h4>
+                <p class="text-xs font-bold text-purple-800 italic mb-2">“Uncompromising honesty and moral courage”</p>
+                <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                  Doing the right thing even when no one is watching. In all academic assessments, examinations, and community obligations, we uphold truthfulness and honor.
+                </p>
+              </div>
+            </div>
+
+            <!-- Curiosity -->
+            <div class="bg-amber-50/70 border border-amber-200 rounded-2xl p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <div class="w-8 h-8 rounded-xl bg-amber-500 text-white flex items-center justify-center font-bold">
+                    <i data-lucide="lightbulb" class="w-4 h-4"></i>
+                  </div>
+                  <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-white border border-amber-200 text-amber-700">Pillar 2</span>
+                </div>
+                <h4 class="text-base font-black text-slate-900 mb-0.5">Curiosity</h4>
+                <p class="text-xs font-bold text-amber-800 italic mb-2">“Voracious inquiry and intellectual depth”</p>
+                <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                  A passion for questioning assumptions, scientific exploration, and creative problem solving. Scholars interrogate the world with open minds.
+                </p>
+              </div>
+            </div>
+
+            <!-- Equality -->
+            <div class="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <div class="w-8 h-8 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold">
+                    <i data-lucide="scale" class="w-4 h-4"></i>
+                  </div>
+                  <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-white border border-emerald-200 text-emerald-700">Pillar 3</span>
+                </div>
+                <h4 class="text-base font-black text-slate-900 mb-0.5">Equality</h4>
+                <p class="text-xs font-bold text-emerald-800 italic mb-2">“Inherent human dignity and mutual respect”</p>
+                <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                  Embracing diversity and upholding fairness. Every individual’s voice and contributions are valued without prejudice across our campus.
+                </p>
+              </div>
+            </div>
+
+            <!-- Service -->
+            <div class="bg-rose-50/70 border border-rose-200 rounded-2xl p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <div class="w-8 h-8 rounded-xl bg-rose-500 text-white flex items-center justify-center font-bold">
+                    <i data-lucide="hand-heart" class="w-4 h-4"></i>
+                  </div>
+                  <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-white border border-rose-200 text-rose-700">Pillar 4</span>
+                </div>
+                <h4 class="text-base font-black text-slate-900 mb-0.5">Service</h4>
+                <p class="text-xs font-bold text-rose-800 italic mb-2">“Empathetic stewardship and servant leadership”</p>
+                <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                  Using intellect and skills to uplift humanity. Exemplified through campus Work Programme stewardship and social impact initiatives.
+                </p>
+              </div>
+            </div>
+
+            <!-- Community -->
+            <div class="bg-blue-50/70 border border-blue-200 rounded-2xl p-4 flex flex-col justify-between">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <div class="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                  </div>
+                  <span class="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-white border border-blue-200 text-blue-700">Pillar 5</span>
+                </div>
+                <h4 class="text-base font-black text-slate-900 mb-0.5">Community</h4>
+                <p class="text-xs font-bold text-blue-800 italic mb-2">“Ubuntu, solidarity, and shared responsibility”</p>
+                <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                  Living as one family where individual growth and community wellbeing are interconnected through Quaker meetings, dining, and daily care.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rules Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- 1. School Uniform -->
+          <div class="bg-white border border-purple-100 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                  <i data-lucide="shirt" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full bg-purple-50 text-purple-800 border border-purple-200">
+                  Mandatory Weekdays
+                </span>
+              </div>
+              <h3 class="text-base font-black text-slate-900 mb-1.5">School Uniform Policy</h3>
+              <p class="text-xs font-bold text-purple-950 bg-purple-50/70 p-3 rounded-2xl border border-purple-100 mb-3 leading-relaxed">
+                “Students are required to be dressed in complete school uniform during official school hours on all weekdays.”
+              </p>
+              <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                Full school uniform is compulsory from 7:40 AM through the close of the academic day from Monday to Friday. Neat and tidy presentation is expected across classrooms, labs, and library.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-purple-50 flex items-center justify-between text-[11px] text-slate-400">
+              <span class="font-semibold">LIFESTYLE PROTOCOL</span>
+              <span class="text-purple-700 font-bold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i> Mandatory</span>
+            </div>
+          </div>
+
+          <!-- 2. Silent Prep -->
+          <div class="bg-white border border-purple-100 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                  <i data-lucide="volume-x" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full bg-purple-50 text-purple-800 border border-purple-200">
+                  Strict Silence
+                </span>
+              </div>
+              <h3 class="text-base font-black text-slate-900 mb-1.5">Silent Evening Prep</h3>
+              <p class="text-xs font-bold text-purple-950 bg-purple-50/70 p-3 rounded-2xl border border-purple-100 mb-3 leading-relaxed">
+                “Silent prep must be strictly observed during designated evening study hours in all academic venues and study halls.”
+              </p>
+              <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                Evening study sessions require absolute quiet to maintain an optimal study environment. Weekday prep concludes at 10:30 PM, while weekend prep concludes at 9:00 PM, after which students retire to dormitories to sleep.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-purple-50 flex items-center justify-between text-[11px] text-slate-400">
+              <span class="font-semibold">ACADEMIC PROTOCOL</span>
+              <span class="text-purple-700 font-bold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i> Mandatory</span>
+            </div>
+          </div>
+
+          <!-- 3. Exam Quiet -->
+          <div class="bg-white border border-purple-100 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                  <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full bg-purple-50 text-purple-800 border border-purple-200">
+                  Campus Quiet Zone
+                </span>
+              </div>
+              <h3 class="text-base font-black text-slate-900 mb-1.5">Exam Quiet Protocol</h3>
+              <p class="text-xs font-bold text-purple-950 bg-purple-50/70 p-3 rounded-2xl border border-purple-100 mb-3 leading-relaxed">
+                “Students and staff must maintain complete silence across campus throughout all official examination sessions.”
+              </p>
+              <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                Whenever an examination or test is in progress, adjacent areas are designated strict quiet zones. Noise disruptions are strictly prohibited across campus.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-purple-50 flex items-center justify-between text-[11px] text-slate-400">
+              <span class="font-semibold">EXAM PROTOCOL</span>
+              <span class="text-purple-700 font-bold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i> Mandatory</span>
+            </div>
+          </div>
+
+          <!-- 4. Mandatory Meals -->
+          <div class="bg-white border border-purple-100 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                  <i data-lucide="utensils" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full bg-purple-50 text-purple-800 border border-purple-200">
+                  Lunch & Dinner Compulsory
+                </span>
+              </div>
+              <h3 class="text-base font-black text-slate-900 mb-1.5">Mandatory Meal Attendance</h3>
+              <p class="text-xs font-bold text-purple-950 bg-purple-50/70 p-3 rounded-2xl border border-purple-100 mb-3 leading-relaxed">
+                “Attendance at Lunch and Dinner is compulsory for all students; Breakfast and Snack breaks are optional.”
+              </p>
+              <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                To safeguard community health, nutrition, and accountability, Lunch (1:00 PM – 2:00 PM) and Dinner (6:00 PM – 7:00 PM) are mandatory. Breakfast and snacks are optional.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-purple-50 flex items-center justify-between text-[11px] text-slate-400">
+              <span class="font-semibold">COMMUNITY PROTOCOL</span>
+              <span class="text-purple-700 font-bold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i> Mandatory</span>
+            </div>
+          </div>
+
+          <!-- 5. Work Programme -->
+          <div class="bg-white border border-purple-100 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                  <i data-lucide="briefcase" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full bg-purple-50 text-purple-800 border border-purple-200">
+                  Campus Stewardship
+                </span>
+              </div>
+              <h3 class="text-base font-black text-slate-900 mb-1.5">Student Work Programme Duties</h3>
+              <p class="text-xs font-bold text-purple-950 bg-purple-50/70 p-3 rounded-2xl border border-purple-100 mb-3 leading-relaxed">
+                “All students must punctually report to and diligently complete their assigned work programme duties.”
+              </p>
+              <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                Work programme responsibilities instill stewardship, shared responsibility, and practical leadership across campus. Students report punctually to designated supervisors.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-purple-50 flex items-center justify-between text-[11px] text-slate-400">
+              <span class="font-semibold">SERVICE PROTOCOL</span>
+              <span class="text-purple-700 font-bold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i> Mandatory</span>
+            </div>
+          </div>
+
+          <!-- 6. Sunday Quaker Meetings -->
+          <div class="bg-white border border-purple-100 rounded-3xl p-5 sm:p-6 shadow-sm flex flex-col justify-between">
+            <div>
+              <div class="flex items-start justify-between gap-3 mb-3">
+                <div class="w-10 h-10 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center shrink-0">
+                  <i data-lucide="heart" class="w-5 h-5"></i>
+                </div>
+                <span class="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 rounded-full bg-purple-50 text-purple-800 border border-purple-200">
+                  Sunday Fellowship
+                </span>
+              </div>
+              <h3 class="text-base font-black text-slate-900 mb-1.5">Sunday Quaker Meeting for Worship</h3>
+              <p class="text-xs font-bold text-purple-950 bg-purple-50/70 p-3 rounded-2xl border border-purple-100 mb-3 leading-relaxed">
+                “On Sundays, all community members are expected to gather in the Dining Hall or outdoor grounds for Quaker meeting, unless formally excused on medical grounds.”
+              </p>
+              <p class="text-xs text-slate-600 leading-relaxed font-medium">
+                Sunday Quaker meeting provides communal reflection and spiritual fellowship. Attendance is expected for all individuals; those unwell must report to the clinic or leadership.
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-purple-50 flex items-center justify-between text-[11px] text-slate-400">
+              <span class="font-semibold">SPIRITUAL PROTOCOL</span>
+              <span class="text-purple-700 font-bold flex items-center gap-1"><i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-emerald-500"></i> Mandatory</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB PANEL 2: ANNOUNCEMENTS -->
+      <div id="panelAnnounce" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div id="postAnnounceCol" class="hidden bg-white border border-purple-100 rounded-3xl p-6 shadow-sm h-fit">
+          <h3 class="text-lg font-black text-slate-900 mb-1">Post Announcement</h3>
+          <p class="text-xs text-slate-500 mb-3 font-medium">Broadcasts to all devices across USAP Community School.</p>
+          <div class="text-[11px] font-bold text-purple-950 flex items-center justify-between bg-purple-50 px-3 py-2 rounded-xl border border-purple-100 mb-3">
+            <span>Posting as: <strong id="announcePostingAuthor" class="text-purple-700">User</strong></span>
+            <span id="announcePostingRole" class="text-[10px] bg-white px-2 py-0.5 rounded-full border border-purple-200 font-extrabold text-purple-900">Role</span>
+          </div>
+          <textarea id="announceTextInput" rows="3" placeholder="Write notice or attach voice memo..." class="w-full p-3 bg-slate-50 border border-slate-300 rounded-2xl text-xs focus:outline-none focus:border-purple-600 focus:bg-white resize-none mb-3"></textarea>
+
+          <!-- Voice Communication Controls (Only for non-students) -->
+          <div id="voiceSectionNonStudent" class="hidden mb-3 space-y-2">
+            <div id="voiceRecordReady" class="flex items-center justify-between bg-purple-50/70 p-2.5 rounded-xl border border-purple-100">
+              <div class="text-[11px] text-purple-950 font-bold flex items-center gap-1.5">
+                <i data-lucide="mic" class="w-3.5 h-3.5 text-purple-600"></i>
+                <span>Voice Communication</span>
+              </div>
+              <button type="button" id="btnStartRecordVoice" class="px-3 py-1.5 bg-purple-100 hover:bg-purple-200 text-purple-800 font-extrabold text-xs rounded-lg border border-purple-300 transition flex items-center gap-1.5">
+                <i data-lucide="mic" class="w-3 h-3 text-purple-700"></i>
+                <span>Record Audio</span>
+              </button>
+            </div>
+
+            <div id="voiceRecordingActive" class="hidden p-3 bg-rose-50 border border-rose-200 rounded-2xl flex items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-600 animate-ping"></span>
+                <span class="text-xs font-bold text-rose-950">Recording: <strong id="voiceRecordTimer" class="font-mono">00:00</strong></span>
+              </div>
+              <button type="button" id="btnStopRecordVoice" class="px-3 py-1 bg-rose-600 text-white font-bold text-xs rounded-xl shadow-xs">Done</button>
+            </div>
+
+            <div id="voicePreviewBox" class="hidden p-3 bg-purple-50/90 border border-purple-200 rounded-2xl space-y-2">
+              <div class="flex items-center justify-between text-xs font-bold text-purple-950">
+                <span class="flex items-center gap-1.5">
+                  <i data-lucide="mic" class="w-3.5 h-3.5 text-purple-600"></i>
+                  <span>Voice Clip Attached</span>
+                </span>
+                <button type="button" id="btnDiscardVoice" class="text-rose-600 hover:text-rose-800 text-[11px] font-bold">Discard</button>
+              </div>
+              <audio id="voiceAudioPlayer" controls class="w-full h-8 rounded-lg"></audio>
+            </div>
+          </div>
+
+          <div id="voiceSectionStudentNotice" class="hidden mb-3 p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-500 flex items-center gap-2">
+            <i data-lucide="mic-off" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+            <span>Voice announcements are reserved for faculty & staff. Students publish text announcements.</span>
+          </div>
+
+          <button id="btnPostAnnounce" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5">
+            <i data-lucide="megaphone" class="w-3.5 h-3.5"></i>
+            <span>Publish Notice (5 Days)</span>
+          </button>
+        </div>
+
+        <div class="lg:col-span-2 space-y-3">
+          <h3 class="text-lg font-black text-slate-900 mb-2">Active School Announcements</h3>
+          <div id="announceListContainer" class="space-y-3">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB PANEL 3: DAILY ROUTINE & MEALS (MEAL TIMES ARE NOT TESTS) -->
+      <div id="panelRoutine" class="hidden space-y-4">
+        <div class="bg-white border border-purple-100 rounded-3xl p-6 shadow-sm">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div>
+              <h2 class="text-xl font-black text-slate-900 flex items-center gap-2">
+                <i data-lucide="clock" class="w-5 h-5 text-purple-600"></i>
+                Daily School Routine & Meal Schedule
+              </h2>
+              <p class="text-xs text-slate-500 font-medium mt-1">
+                Notice: Meal times are school daily routines, not tests. Timetable reminders are dispatched automatically.
+              </p>
+            </div>
+            <button id="btnSyncPhoneFromRoutine" class="px-3.5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs rounded-xl transition flex items-center gap-1.5 self-start sm:self-auto">
+              <i data-lucide="smartphone" class="w-3.5 h-3.5"></i>
+              <span>Connect Phone Reminders</span>
+            </button>
+          </div>
+
+          <div id="routineListContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+            <!-- Dynamically populated from DAILY_ROUTINE_SCHEDULE -->
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB PANEL 4: SCHEDULE TEST (RESTRICTED STRICTLY TO TEACHERS & TAs) -->
+      <div id="panelSchedule" class="hidden max-w-2xl mx-auto bg-white border border-purple-100 rounded-3xl p-6 sm:p-8 shadow-sm">
+        <div class="mb-5">
+          <h2 class="text-xl font-black text-slate-900">Schedule an Academic Test / Exam</h2>
+          <p class="text-xs text-slate-500 font-medium mt-0.5">
+            Strict Permission: Only verified academic Teachers and Teaching Assistants (TAs) are authorized to schedule tests.
+          </p>
+        </div>
+
+        <div id="scheduleAlertBanner" class="hidden p-4 rounded-2xl text-xs font-semibold mb-5 flex items-start gap-2.5"></div>
+
+        <form id="scheduleTestForm" class="space-y-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Test Title</label>
+            <input type="text" id="schedTitle" required placeholder="e.g. Organic Chemistry & Hydrocarbons Assessment" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium focus:outline-none focus:border-purple-600 focus:bg-white" />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Academic Subject</label>
+              <select id="schedSubject" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold focus:outline-none focus:border-purple-600">
+                <option value="Biology">Biology</option>
+                <option value="Mathematics">Mathematics</option>
+                <option value="Physics">Physics</option>
+                <option value="Research Methods">Research Methods</option>
+                <option value="Computers">Computers</option>
+                <option value="Humanities">Humanities</option>
+                <option value="Chemistry">Chemistry</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Class</label>
+              <select id="schedClass" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold focus:outline-none focus:border-purple-600">
+                <option value="LOWER 6X">LOWER 6X</option>
+                <option value="LOWER 6Y">LOWER 6Y</option>
+                <option value="UPPER 6X">UPPER 6X</option>
+                <option value="UPPER 6Y">UPPER 6Y</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Room</label>
+            <select id="schedRoom" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold focus:outline-none focus:border-purple-600">
+              <option value="Library">Library</option>
+              <option value="DH">DH</option>
+              <option value="Music room">Music room</option>
+              <option value="Chemistry/Biology lab">Chemistry/Biology lab</option>
+              <option value="Physics lab">Physics lab</option>
+            </select>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Date</label>
+              <input type="date" id="schedDate" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium focus:outline-none focus:border-purple-600 focus:bg-white" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">Start Time</label>
+              <input type="time" id="schedStart" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium focus:outline-none focus:border-purple-600 focus:bg-white" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1">End Time</label>
+              <input type="time" id="schedEnd" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium focus:outline-none focus:border-purple-600 focus:bg-white" />
+            </div>
+          </div>
+
+          <div class="p-3 bg-purple-50 rounded-xl border border-purple-200 text-[11px] text-purple-900 space-y-1">
+            <p class="font-bold">Automated School Validations:</p>
+            <p>• Only future times accepted (past time scheduling blocked).</p>
+            <p>• Saturday allows <strong>Biology, Physics, Mathematics, and Chemistry</strong>.</p>
+            <p>• Sunday tests strictly allow Mathematics & Chemistry.</p>
+            <p>• Tests cannot overlap with Snack Break (9:45-10:00) or Lunch (1:00-2:00).</p>
+          </div>
+
+          <button type="submit" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow-lg shadow-purple-600/30 transition active:scale-[0.99]">
+            Save Online & Broadcast to All Devices
+          </button>
+        </form>
+      </div>
+
+      <!-- TAB PANEL 5: FACULTY DIRECTORY -->
+      <div id="panelPeople" class="hidden bg-white border border-purple-100 rounded-3xl p-6 shadow-sm">
+        <h2 class="text-xl font-black text-slate-900 mb-1">Faculty & Staff Directory</h2>
+        <p class="text-xs text-slate-500 font-medium mb-5">USAP Community School academic faculty, teaching assistants, and leadership</p>
+        <div id="facultyDirectoryContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Dynamically populated -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- DEVICE PERMISSIONS & TIME SYNCHRONIZATION MODAL -->
+  <div id="phonePermsModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl border-2 border-purple-200 animate-in fade-in zoom-in-95 my-4">
+      <div class="flex items-center justify-between border-b border-purple-100 pb-4 mb-4">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-xl bg-purple-700 text-white flex items-center justify-center font-black text-sm">U</div>
+          <span class="font-black text-xs text-slate-900">Device Permissions</span>
+        </div>
+        <button id="btnClosePhoneModal" class="p-1 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="text-left mb-4">
+        <h3 class="text-lg font-black text-purple-950 flex items-center gap-2">
+          <i data-lucide="smartphone" class="w-5 h-5 text-purple-600"></i>
+          Device Permissions & Hardware Integration
+        </h3>
+        <p class="text-xs text-slate-500 font-medium mt-1">
+          Synchronize your device clock, background notification alarms, screen wake lock, and vibration engine for school coordination.
+        </p>
+      </div>
+
+      <!-- Time card -->
+      <div class="bg-purple-50/80 border border-purple-200 rounded-2xl p-4 mb-4 text-left space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-purple-950 flex items-center gap-1.5">
+            <i data-lucide="clock" class="w-4 h-4 text-purple-600"></i>
+            Device Clock & Timezone Synchronization
+          </span>
+          <span class="text-[10px] font-mono bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">Time Synced</span>
+        </div>
+        <div class="bg-white p-3 rounded-xl border border-purple-100 text-xs font-medium space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-slate-500">Live Device Time:</span>
+            <strong id="modalDeviceTime" class="font-mono text-purple-950 text-base font-black">--:--:--</strong>
+          </div>
+          <div class="flex items-center justify-between">
+            <span class="text-slate-500">Timezone:</span>
+            <span id="modalDeviceZone" class="text-slate-700 font-semibold">Africa/Harare</span>
+          </div>
+        </div>
+        <p class="text-[11px] text-purple-800 font-medium">
+          Accurate device time ensures exact dispatch for <strong>5:50 PM Dinner</strong>, <strong>9:00 PM Snack</strong>, <strong>Prep End</strong>, and <strong>60-Second Exam warnings</strong>.
+        </p>
+      </div>
+
+      <!-- Notification button -->
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 mb-4 text-left">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+            <i data-lucide="bell" class="w-4 h-4 text-purple-600"></i>
+            Background Alerts & Alarms
+          </span>
+          <span id="modalNotifStatus" class="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase bg-amber-100 text-amber-800">PROMPT</span>
+        </div>
+        <button id="btnGrantNotif" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5"></i>
+          <span>Grant Phone Notification Permission</span>
+        </button>
+      </div>
+
+      <!-- Microphone Permission button -->
+      <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 mb-4 text-left">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+            <i data-lucide="mic" class="w-4 h-4 text-purple-600"></i>
+            Microphone Access
+          </span>
+          <span id="modalMicStatus" class="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase bg-amber-100 text-amber-800">PROMPT</span>
+        </div>
+        <p class="text-[11px] text-slate-600 mb-3">Enables voice announcement recording for authorized faculty and staff.</p>
+        <button id="btnGrantMic" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2">
+          <i data-lucide="mic" class="w-3.5 h-3.5"></i>
+          <span>Allow Microphone Permission</span>
+        </button>
+      </div>
+
+      <!-- Direct Phone Settings Guidance -->
+      <div id="phoneSettingsGuideBox" class="bg-rose-50 border border-rose-200 rounded-2xl p-4 mb-4 text-left text-xs space-y-1">
+        <div class="font-bold text-rose-900 flex items-center gap-1.5">
+          <i data-lucide="settings" class="w-4 h-4 text-rose-600"></i>
+          <span>How to Enable in Phone Settings:</span>
+        </div>
+        <ul class="text-[11px] text-rose-800 space-y-1 list-disc pl-4">
+          <li><strong>Android:</strong> Settings → Apps → Browser / USAP School → Permissions → Notifications → <em>Allow</em>.</li>
+          <li><strong>iPhone / iOS:</strong> Settings → Safari / Chrome → Notifications → <em>Allow Notifications</em>.</li>
+          <li><strong>Clock:</strong> Ensure phone settings have <em>"Set time automatically"</em> turned ON.</li>
+        </ul>
+      </div>
+
+      <button id="btnDonePhoneModal" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow-md transition">Done</button>
+    </div>
+  </div>
+
+  <!-- SBURA THE QUESTION MAN STUDENT VERIFICATION MODAL -->
+  <div id="studentVerificationModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border-2 border-purple-200">
+      <div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="mail" class="w-7 h-7"></i>
+      </div>
+      <h3 class="text-lg font-black text-slate-900 mb-1">Verify Student Email</h3>
+      <p class="text-xs text-slate-500 font-medium mb-3">
+        Dispatched by <strong>SBURA THE QUESTION MAN</strong>.
+      </p>
+
+      <div class="bg-purple-50/90 p-3.5 rounded-2xl border border-purple-200 text-left text-xs mb-4 space-y-2">
+        <div class="flex items-center justify-between font-bold text-purple-950">
+          <span class="flex items-center gap-1.5"><i data-lucide="lock" class="w-3.5 h-3.5 text-purple-600"></i> Code Hidden for Privacy</span>
+          <span class="text-[10px] bg-white text-purple-700 px-2 py-0.5 rounded-full border border-purple-200">Secure</span>
+        </div>
+        <p class="text-[11px] text-purple-800 leading-relaxed font-medium">
+          As requested, your 6-digit code is <strong>not shown on this page</strong>. Click the link below or copy the verification link to retrieve your code.
+        </p>
+        <a id="btnOpenCodePortalLink" href="#" target="_blank" class="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition flex items-center justify-center gap-1.5">
+          <span>Click Here to View 6-Digit Code</span>
+          <i data-lucide="external-link" class="w-3 h-3"></i>
+        </a>
+        <button type="button" id="btnCopyVerificationLink" class="w-full py-1.5 bg-white border border-purple-300 text-purple-900 hover:bg-purple-50 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1.5">
+          <i data-lucide="copy" class="w-3 h-3 text-purple-600" id="copyLinkIcon"></i>
+          <span id="copyLinkText">Copy Email Verification Link</span>
+        </button>
+      </div>
+
+      <div class="text-left text-xs font-bold text-slate-700 mb-1">
+        Enter 6-Digit Code from the link:
+      </div>
+      <input type="text" id="verifyCodeInput" maxlength="6" placeholder="000000" class="w-full text-center font-mono text-xl tracking-widest py-3 border border-slate-300 rounded-xl mb-4 font-bold focus:outline-none focus:border-purple-600" />
+      <button id="btnConfirmVerification" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs rounded-xl shadow-lg transition">Verify & Complete Sign In</button>
+      <button id="btnCancelVerification" class="w-full mt-2 py-2 text-xs font-bold text-slate-400 hover:text-slate-600">Cancel</button>
+    </div>
+  </div>
+
+  <!-- REAL-TIME ALERT POPUP (Dinners, snacks, prep & exam quiet warnings) -->
+  <div id="realtimeAlertModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 text-center shadow-2xl border-2 border-purple-300">
+      <div class="w-16 h-16 rounded-3xl bg-purple-600 text-white flex items-center justify-center mx-auto mb-3 shadow-lg shadow-purple-600/30">
+        <i data-lucide="bell" class="w-8 h-8"></i>
+      </div>
+      <h3 id="alertModalTitle" class="text-xl font-black text-slate-900 mb-1">Notification</h3>
+      <div class="bg-purple-50 p-4 rounded-2xl border border-purple-200 my-4 text-left">
+        <p id="alertModalBody" class="text-xs text-purple-950 leading-relaxed font-semibold"></p>
+      </div>
+      <button id="btnDismissAlert" class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-black text-xs rounded-xl shadow-lg transition">Acknowledge & Continue</button>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="w-full text-center text-slate-600 font-bold text-xs py-6 px-4 bg-white/60 border-t border-purple-100 mt-12">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-2">
+      <span>sburathequestionman.co.za in partnership with pineapplemieh🍍.co.zw</span>
+    </div>
+  </footer>
+
+  <!-- SCRIPT: APPLICATION ENGINE -->
+  <script>
+    // Faculty & Staff Directory with Mai Z. Mano in School Leadership
+    const FACULTY_DIRECTORY = [
+      { name: "Mr Mangara", area: "Biology", role: "TEACHER" },
+      { name: "Mr Godwins", area: "Mathematics", role: "TEACHER" },
+      { name: "Ms Alistar", area: "Physics", role: "TEACHER" },
+      { name: "Mr. W. Dliwayo", area: "Research Methods (Lower 6 only)", role: "TEACHER" },
+      { name: "Mr Lloyd", area: "Computers", role: "TEACHER" },
+      { name: "Mr Mandla", area: "Humanities", role: "TEACHER" },
+      { name: "Mai Jerry", area: "Chemistry", role: "TEACHER" },
+      { name: "Mr Tinashe", area: "Biology", role: "TA" },
+      { name: "Ms Maka", area: "Mathematics", role: "TA" },
+      { name: "Ms Victoria", area: "Physics", role: "TA" },
+      { name: "Ms Jean-Anna", area: "Chemistry", role: "TA" },
+      { name: "Mr Nate Kuchena", area: "School Leadership & Head of School", role: "HEAD" },
+      { name: "Mai Z. Mano", area: "College Counselling & School Leadership", role: "HEAD" },
+      { name: "Mai Z. Mano", area: "Co-Founder & School Leadership", role: "CO_FOUNDER" },
+      { name: "Ms Vimbai", area: "Estate Management", role: "ESTATE" },
+      { name: "Non Faculty", area: "School Support Staff", role: "NON_FACULTY" }
+    ];
+
+    // Daily routine & meal timetable (Meals are routines, not tests)
+    const DAILY_ROUTINE_SCHEDULE = [
+      { time: "07:00 – 07:35 AM", title: "Breakfast", location: "Dining Hall (DH)", type: "meal" },
+      { time: "07:40 AM", title: "Academic Lessons Begin", location: "Classrooms & Labs", type: "academic" },
+      { time: "09:45 – 10:00 AM", title: "Morning Snack Break", location: "Dining Hall (DH)", type: "meal" },
+      { time: "12:00 – 01:00 PM (Wed)", title: "Wednesday Convocation", location: "School Hall", type: "assembly" },
+      { time: "01:00 – 02:00 PM", title: "Lunch Break", location: "Dining Hall (DH)", type: "meal" },
+      { time: "04:00 PM", title: "Class Lessons & Tests Cutoff", location: "Campus-wide", type: "academic" },
+      { time: "05:50 PM", title: "Dinner Notification (10 mins before Dinner)", location: "All Devices", type: "notification" },
+      { time: "06:00 – 07:00 PM", title: "Dinner Time", location: "Dining Hall (DH)", type: "meal" },
+      { time: "07:00 PM", title: "Evening PREP Begins", location: "Study Halls & Library", type: "prep" },
+      { time: "09:00 PM", title: "Evening Snack Time", location: "Dining Hall (DH)", type: "meal" },
+      { time: "09:00 PM (Weekends)", title: "Weekend PREP Ends (Students sleep)", location: "Dormitories", type: "prep" },
+      { time: "10:30 PM (Weekdays)", title: "Weekday PREP Ends (Students sleep)", location: "Dormitories", type: "prep" }
+    ];
+
+    // Sample online tests
+    let testsData = [
+      { id: '1', title: 'Biology Cell Respiration & Bioenergetics', subject: 'Biology', schoolClass: 'LOWER 6X', room: 'Chemistry/Biology lab', date: '2026-09-26', start: '08:30', end: '10:00', supervisor: 'Mr Mangara' },
+      { id: '2', title: 'Calculus: Integration by Parts & Series', subject: 'Mathematics', schoolClass: 'UPPER 6X', room: 'Library', date: '2026-09-26', start: '10:15', end: '12:00', supervisor: 'Mr Godwins' },
+      { id: '3', title: 'Physics Optics & Quantum Assessment', subject: 'Physics', schoolClass: 'LOWER 6Y', room: 'Physics lab', date: '2026-09-26', start: '14:00', end: '15:30', supervisor: 'Ms Alistar' }
+    ];
+
+    let announcementsData = [
+      { id: '1', author: 'Mr Nate Kuchena', role: 'HEAD', date: 'Sep 25, 10:00 AM', body: 'Welcome to Term 3. All students must observe campus quiet hours during scheduled examinations.' },
+      { id: '2', author: 'Mai Z. Mano', role: 'CO_FOUNDER', date: 'Sep 24, 02:30 PM', body: 'College counselling workshops commence this week. Check your emails for individual interview schedules.' }
+    ];
+
+    let currentSession = null;
+    let soundEnabled = true;
+    let selectedClassFilter = 'ALL';
+    let alertedKeys = {};
+    let currentStudentAuthCode = '582914';
+
+    // DOM Elements
+    const authGateView = document.getElementById('authGateView');
+    const dashboardView = document.getElementById('dashboardView');
+    const authRoleSelect = document.getElementById('authRoleSelect');
+    const studentAuthFields = document.getElementById('studentAuthFields');
+    const facultyAuthFields = document.getElementById('facultyAuthFields');
+    const facultyNameSelect = document.getElementById('facultyNameSelect');
+    const authPasswordInput = document.getElementById('authPasswordInput');
+    const studentEmailInput = document.getElementById('studentEmailInput');
+    const studentClassSelect = document.getElementById('studentClassSelect');
+    const btnSubmitLogin = document.getElementById('btnSubmitLogin');
+    const authAlertBanner = document.getElementById('authAlertBanner');
+    const userProfileArea = document.getElementById('userProfileArea');
+    const userDisplayName = document.getElementById('userDisplayName');
+    const userRoleBadge = document.getElementById('userRoleBadge');
+    const btnLogout = document.getElementById('btnLogout');
+    const tabBtnSchedule = document.getElementById('tabBtnSchedule');
+    const btnHeaderScheduleTest = document.getElementById('btnHeaderScheduleTest');
+    const postAnnounceCol = document.getElementById('postAnnounceCol');
+    const phonePermsModal = document.getElementById('phonePermsModal');
+    const studentVerificationModal = document.getElementById('studentVerificationModal');
+    const realtimeAlertModal = document.getElementById('realtimeAlertModal');
+
+    // Initialize UI
+    function init() {
+      lucide.createIcons();
+      populateFacultyDropdown();
+      populateRoutineList();
+      populatePeopleDirectory();
+      renderTests();
+      renderAnnouncements();
+
+      // Check existing session
+      const saved = localStorage.getItem('usapStandaloneSession');
+      if (saved) {
+        try {
+          currentSession = JSON.parse(saved);
+          showDashboard();
+        } catch {
+          showAuthGate();
+        }
+      } else {
+        showAuthGate();
+      }
+
+      // Start clock & alarms ticker
+      setInterval(tickClockAndAlarms, 1000);
+    }
+
+    // Role select handler
+    authRoleSelect.addEventListener('change', () => {
+      const role = authRoleSelect.value;
+      if (role === 'STUDENT') {
+        studentAuthFields.classList.remove('hidden');
+        facultyAuthFields.classList.add('hidden');
+      } else {
+        studentAuthFields.classList.add('hidden');
+        facultyAuthFields.classList.remove('hidden');
+        populateFacultyDropdown();
+      }
+    });
+
+    function populateFacultyDropdown() {
+      const role = authRoleSelect.value;
+      facultyNameSelect.innerHTML = '';
+      const list = FACULTY_DIRECTORY.filter(f => f.role === role || (f.name === 'Mai Z. Mano' && (role === 'HEAD' || role === 'CO_FOUNDER')));
+      list.forEach(item => {
+        const opt = document.createElement('option');
+        opt.value = item.name;
+        opt.textContent = `${item.name} (${item.area})`;
+        facultyNameSelect.appendChild(opt);
+      });
+    }
+
+    // Login submit
+    btnSubmitLogin.addEventListener('click', (e) => {
+      e.preventDefault();
+      authAlertBanner.classList.add('hidden');
+      const role = authRoleSelect.value;
+      const pass = authPasswordInput.value;
+
+      if (!pass) {
+        showAuthAlert('Please enter your password.', 'bad');
+        return;
+      }
+
+      if (role === 'STUDENT') {
+        const email = studentEmailInput.value.trim().toLowerCase();
+        if (!email.endsWith('@usapschool.org')) {
+          showAuthAlert('Students must use an official @usapschool.org email.', 'bad');
+          return;
+        }
+        // Open verification modal (Code hidden, accessible via link)
+        currentStudentAuthCode = Math.floor(100000 + Math.random() * 900000).toString();
+        const codeLink = `https://mail.google.com/mail/u/0/#search/from%3Asbura+or+SBURA+THE+QUESTION+MAN`;
+        document.getElementById('btnOpenCodePortalLink').href = codeLink;
+        document.getElementById('studentVerificationModal').classList.remove('hidden');
+        return;
+      }
+
+      // Non-student
+      const name = facultyNameSelect.value;
+      currentSession = {
+        name: name,
+        role: role,
+        email: `${name.toLowerCase().replace(/[^a-z]/g, '')}@usapschool.org`
+      };
+      localStorage.setItem('usapStandaloneSession', JSON.stringify(currentSession));
+      showDashboard();
+    });
+
+    // Verification code confirmation
+    document.getElementById('btnConfirmVerification').addEventListener('click', () => {
+      const entered = document.getElementById('verifyCodeInput').value.trim();
+      if (entered !== currentStudentAuthCode) {
+        alert('Incorrect verification code. Please click the link to view your 6-digit code, then enter it here.');
+        return;
+      }
+
+      currentSession = {
+        name: studentEmailInput.value.split('@')[0].toUpperCase(),
+        role: 'STUDENT',
+        schoolClass: studentClassSelect.value,
+        email: studentEmailInput.value.trim()
+      };
+      localStorage.setItem('usapStandaloneSession', JSON.stringify(currentSession));
+      studentVerificationModal.classList.add('hidden');
+      showDashboard();
+    });
+
+    // Copy Email Verification Link button
+    document.getElementById('btnCopyVerificationLink').addEventListener('click', () => {
+      const codeLink = document.getElementById('btnOpenCodePortalLink').href;
+      navigator.clipboard.writeText(codeLink).then(() => {
+        document.getElementById('copyLinkText').textContent = 'Link Copied to Clipboard!';
+        setTimeout(() => {
+          document.getElementById('copyLinkText').textContent = 'Copy Email Verification Link';
+        }, 2500);
+      });
+    });
+
+    document.getElementById('btnCancelVerification').addEventListener('click', () => {
+      studentVerificationModal.classList.add('hidden');
+    });
+
+    // Show Dashboard
+    function showDashboard() {
+      authGateView.classList.add('hidden');
+      dashboardView.classList.remove('hidden');
+      userProfileArea.classList.remove('hidden');
+      userDisplayName.textContent = currentSession.name;
+      userRoleBadge.textContent = `${currentSession.role} ${currentSession.schoolClass ? '• ' + currentSession.schoolClass : ''}`;
+
+      // STRICT PERMISSION: ONLY TEACHERS AND TAs CAN SCHEDULE TESTS!
+      const isTeacherOrTA = currentSession.role === 'TEACHER' || currentSession.role === 'TA';
+      if (isTeacherOrTA) {
+        tabBtnSchedule.classList.remove('hidden');
+        btnHeaderScheduleTest.classList.remove('hidden');
+      } else {
+        tabBtnSchedule.classList.add('hidden');
+        btnHeaderScheduleTest.classList.add('hidden');
+      }
+      // Students and all signed-in users can post announcements
+      postAnnounceCol.classList.remove('hidden');
+      document.getElementById('announcePostingAuthor').textContent = currentSession.name;
+      document.getElementById('announcePostingRole').textContent = currentSession.role === 'STUDENT' ? `Student (${currentSession.schoolClass || 'General'})` : currentSession.role;
+
+      // Voice section: ONLY for non-students
+      if (currentSession.role !== 'STUDENT') {
+        document.getElementById('voiceSectionNonStudent').classList.remove('hidden');
+        document.getElementById('voiceSectionStudentNotice').classList.add('hidden');
+      } else {
+        document.getElementById('voiceSectionNonStudent').classList.add('hidden');
+        document.getElementById('voiceSectionStudentNotice').classList.remove('hidden');
+      }
+      resetStandaloneVoice();
+
+      switchTab('tests');
+    }
+
+    // Show Auth Gate (Log Out)
+    function showAuthGate() {
+      authGateView.classList.remove('hidden');
+      dashboardView.classList.add('hidden');
+      userProfileArea.classList.add('hidden');
+      localStorage.removeItem('usapStandaloneSession');
+      currentSession = null;
+    }
+
+    btnLogout.addEventListener('click', showAuthGate);
+
+    // Switch Tabs
+    const tabs = {
+      tests: document.getElementById('panelTests'),
+      rules: document.getElementById('panelRules'),
+      announce: document.getElementById('panelAnnounce'),
+      routine: document.getElementById('panelRoutine'),
+      schedule: document.getElementById('panelSchedule'),
+      people: document.getElementById('panelPeople'),
+    };
+
+    function switchTab(target) {
+      Object.keys(tabs).forEach(k => {
+        if (k === target) tabs[k].classList.remove('hidden');
+        else tabs[k].classList.add('hidden');
+      });
+
+      // Update button styles
+      document.querySelectorAll('#dashboardView > div:first-child button').forEach(b => {
+        b.className = "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-white text-slate-700 hover:bg-slate-100 border border-slate-200";
+      });
+
+      if (target === 'tests') document.getElementById('tabBtnTests').className = "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-purple-600 text-white shadow-md shadow-purple-600/20";
+      if (target === 'rules') document.getElementById('tabBtnRules').className = "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-purple-600 text-white shadow-md shadow-purple-600/20";
+      if (target === 'announce') document.getElementById('tabBtnAnnounce').className = "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-purple-600 text-white shadow-md shadow-purple-600/20";
+      if (target === 'routine') document.getElementById('tabBtnRoutine').className = "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-purple-600 text-white shadow-md shadow-purple-600/20";
+      if (target === 'schedule') document.getElementById('tabBtnSchedule').className = "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-purple-600 text-white shadow-md shadow-purple-600/20";
+      if (target === 'people') document.getElementById('tabBtnPeople').className = "flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-extrabold transition bg-purple-600 text-white shadow-md shadow-purple-600/20";
+
+      lucide.createIcons();
+    }
+
+    document.getElementById('tabBtnTests').addEventListener('click', () => switchTab('tests'));
+    document.getElementById('tabBtnRules').addEventListener('click', () => switchTab('rules'));
+    document.getElementById('tabBtnAnnounce').addEventListener('click', () => switchTab('announce'));
+    document.getElementById('tabBtnRoutine').addEventListener('click', () => switchTab('routine'));
+    document.getElementById('tabBtnSchedule').addEventListener('click', () => switchTab('schedule'));
+    document.getElementById('tabBtnPeople').addEventListener('click', () => switchTab('people'));
+    btnHeaderScheduleTest.addEventListener('click', () => switchTab('schedule'));
+
+    // Test form submit
+    document.getElementById('scheduleTestForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      // Role Check
+      if (!currentSession || (currentSession.role !== 'TEACHER' && currentSession.role !== 'TA')) {
+        alert('Permission Denied: Non-teachers and non-Teaching Assistants are not allowed to schedule a test.');
+        return;
+      }
+
+      const newTest = {
+        id: Date.now().toString(),
+        title: document.getElementById('schedTitle').value.trim(),
+        subject: document.getElementById('schedSubject').value,
+        schoolClass: document.getElementById('schedClass').value,
+        room: document.getElementById('schedRoom').value,
+        date: document.getElementById('schedDate').value,
+        start: document.getElementById('schedStart').value,
+        end: document.getElementById('schedEnd').value,
+        supervisor: currentSession.name
+      };
+
+      testsData.push(newTest);
+      renderTests();
+      switchTab('tests');
+      alert('Test successfully saved online and synchronized!');
+    });
+
+    // Render Tests
+    function renderTests() {
+      const tbody = document.getElementById('testsTableBody');
+      tbody.innerHTML = '';
+      const filtered = selectedClassFilter === 'ALL' ? testsData : testsData.filter(t => t.schoolClass === selectedClassFilter);
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-slate-400 font-medium">No tests found for the selected filter.</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(t => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-purple-50/40 transition";
+        tr.innerHTML = `
+          <td class="py-3.5 pr-4 font-bold text-slate-900">${t.title}</td>
+          <td class="py-3.5 px-4"><span class="bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded">${t.subject}</span></td>
+          <td class="py-3.5 px-4 font-semibold">${t.schoolClass}</td>
+          <td class="py-3.5 px-4 text-slate-600">${t.room}</td>
+          <td class="py-3.5 px-4 font-mono">${t.date} (${t.start}–${t.end})</td>
+          <td class="py-3.5 pl-4 text-slate-500">${t.supervisor || '—'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Class filter buttons
+    document.querySelectorAll('.class-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.class-filter-btn').forEach(b => {
+          b.className = "class-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-slate-100 text-slate-700 hover:bg-slate-200";
+        });
+        btn.className = "class-filter-btn px-3 py-1.5 rounded-xl text-xs font-bold transition bg-purple-600 text-white";
+        selectedClassFilter = btn.dataset.class;
+        renderTests();
+      });
+    });
+
+    // Voice recording state in standalone
+    let standaloneMediaRecorder = null;
+    let standaloneAudioChunks = [];
+    let standaloneVoiceBlobUrl = null;
+    let standaloneVoiceBase64 = null;
+    let standaloneVoiceTimer = null;
+    let standaloneRecordSeconds = 0;
+
+    const btnStartRecordVoice = document.getElementById('btnStartRecordVoice');
+    const btnStopRecordVoice = document.getElementById('btnStopRecordVoice');
+    const btnDiscardVoice = document.getElementById('btnDiscardVoice');
+    const voiceRecordReady = document.getElementById('voiceRecordReady');
+    const voiceRecordingActive = document.getElementById('voiceRecordingActive');
+    const voicePreviewBox = document.getElementById('voicePreviewBox');
+    const voiceRecordTimer = document.getElementById('voiceRecordTimer');
+    const voiceAudioPlayer = document.getElementById('voiceAudioPlayer');
+
+    function resetStandaloneVoice() {
+      if (standaloneVoiceTimer) {
+        clearInterval(standaloneVoiceTimer);
+        standaloneVoiceTimer = null;
+      }
+      if (standaloneMediaRecorder && standaloneMediaRecorder.state !== 'inactive') {
+        try { standaloneMediaRecorder.stop(); } catch(e){}
+      }
+      if (standaloneVoiceBlobUrl) {
+        URL.revokeObjectURL(standaloneVoiceBlobUrl);
+      }
+      standaloneVoiceBlobUrl = null;
+      standaloneVoiceBase64 = null;
+      standaloneRecordSeconds = 0;
+      voiceRecordReady.classList.remove('hidden');
+      voiceRecordingActive.classList.add('hidden');
+      voicePreviewBox.classList.add('hidden');
+    }
+
+    if (btnStartRecordVoice) {
+      btnStartRecordVoice.addEventListener('click', async () => {
+        if (!currentSession || currentSession.role === 'STUDENT') {
+          alert('Voice communication is restricted to non-students (faculty and staff).');
+          return;
+        }
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          alert('Microphone recording is not supported in this browser.');
+          return;
+        }
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          standaloneAudioChunks = [];
+          standaloneMediaRecorder = new MediaRecorder(stream);
+          standaloneMediaRecorder.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) standaloneAudioChunks.push(e.data);
+          };
+          standaloneMediaRecorder.onstop = () => {
+            const blob = new Blob(standaloneAudioChunks, { type: standaloneMediaRecorder.mimeType || 'audio/webm' });
+            standaloneVoiceBlobUrl = URL.createObjectURL(blob);
+            voiceAudioPlayer.src = standaloneVoiceBlobUrl;
+            const reader = new FileReader();
+            reader.onloadend = () => {
+              standaloneVoiceBase64 = reader.result;
+            };
+            reader.readAsDataURL(blob);
+            stream.getTracks().forEach(t => t.stop());
+            voiceRecordingActive.classList.add('hidden');
+            voicePreviewBox.classList.remove('hidden');
+          };
+          standaloneMediaRecorder.start(250);
+          standaloneRecordSeconds = 0;
+          voiceRecordTimer.textContent = '00:00';
+          voiceRecordReady.classList.add('hidden');
+          voiceRecordingActive.classList.remove('hidden');
+          standaloneVoiceTimer = setInterval(() => {
+            standaloneRecordSeconds++;
+            const m = String(Math.floor(standaloneRecordSeconds / 60)).padStart(2, '0');
+            const s = String(standaloneRecordSeconds % 60).padStart(2, '0');
+            voiceRecordTimer.textContent = `${m}:${s}`;
+            if (standaloneRecordSeconds >= 120) {
+              btnStopRecordVoice.click();
+            }
+          }, 1000);
+        } catch(err) {
+          alert('Microphone access denied: ' + err.message);
+        }
+      });
+    }
+
+    if (btnStopRecordVoice) {
+      btnStopRecordVoice.addEventListener('click', () => {
+        if (standaloneVoiceTimer) {
+          clearInterval(standaloneVoiceTimer);
+          standaloneVoiceTimer = null;
+        }
+        if (standaloneMediaRecorder && standaloneMediaRecorder.state !== 'inactive') {
+          standaloneMediaRecorder.stop();
+        }
+      });
+    }
+
+    if (btnDiscardVoice) {
+      btnDiscardVoice.addEventListener('click', resetStandaloneVoice);
+    }
+
+    // Render Announcements
+    function renderAnnouncements() {
+      const container = document.getElementById('announceListContainer');
+      container.innerHTML = '';
+      announcementsData.forEach(a => {
+        const card = document.createElement('div');
+        card.className = "bg-white border border-purple-100 rounded-3xl p-5 shadow-sm space-y-2 border-l-4 border-l-purple-600 text-left";
+        const hasAudio = !!a.audioUrl;
+        card.innerHTML = `
+          <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+            <div class="flex items-center gap-2">
+              <strong class="text-slate-900">${a.author}</strong>
+              <span class="${a.role && a.role.startsWith('Student') ? 'bg-amber-50 text-amber-800 border border-amber-200' : 'bg-purple-50 text-purple-700'} font-bold px-2 py-0.5 rounded">${a.role}</span>
+            </div>
+            <span>${a.date}</span>
+          </div>
+          <p class="text-xs text-slate-700 leading-relaxed font-medium">${a.body}</p>
+          ${hasAudio ? `
+            <div class="mt-3 p-3 bg-purple-50/90 rounded-2xl border border-purple-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-xl bg-purple-700 text-white flex items-center justify-center shrink-0">
+                  <i data-lucide="mic" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-purple-950">Voice Communication</div>
+                  <div class="text-[10px] text-purple-700">Official voice notice by ${a.author}</div>
+                </div>
+              </div>
+              <audio controls src="${a.audioUrl}" class="h-8 max-w-full sm:max-w-[240px] shrink-0 rounded-lg"></audio>
+            </div>
+          ` : ''}
+        `;
+        container.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    // Post announcement
+    document.getElementById('btnPostAnnounce').addEventListener('click', () => {
+      const text = document.getElementById('announceTextInput').value.trim();
+      if (!text && !standaloneVoiceBase64) {
+        alert('Please enter an announcement notice or record a voice clip.');
+        return;
+      }
+
+      // Voice only allowed for non-students
+      const attachAudio = currentSession.role !== 'STUDENT' ? standaloneVoiceBase64 : null;
+      const roleBadge = currentSession.role === 'STUDENT' ? `Student (${currentSession.schoolClass || 'General'})` : currentSession.role;
+
+      announcementsData.unshift({
+        id: Date.now().toString(),
+        author: currentSession.name,
+        role: roleBadge,
+        date: 'Just now',
+        body: text || '(Voice Announcement Attached)',
+        audioUrl: attachAudio
+      });
+
+      document.getElementById('announceTextInput').value = '';
+      resetStandaloneVoice();
+      renderAnnouncements();
+    });
+
+    // Populate Routine List
+    function populateRoutineList() {
+      const c = document.getElementById('routineListContainer');
+      c.innerHTML = '';
+      DAILY_ROUTINE_SCHEDULE.forEach(item => {
+        const div = document.createElement('div');
+        div.className = `p-4 rounded-2xl border flex items-start justify-between gap-3 text-left ${item.type === 'meal' ? 'bg-amber-50/50 border-amber-200' : item.type === 'notification' ? 'bg-purple-50/70 border-purple-200' : item.type === 'prep' ? 'bg-indigo-50/50 border-indigo-200' : 'bg-slate-50 border-slate-200'}`;
+        div.innerHTML = `
+          <div>
+            <div class="font-extrabold text-xs sm:text-sm text-slate-900">${item.title}</div>
+            <div class="text-[11px] text-slate-500 mt-0.5">${item.location}</div>
+          </div>
+          <span class="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-slate-700 shrink-0">${item.time}</span>
+        `;
+        c.appendChild(div);
+      });
+    }
+
+    // Populate People Directory
+    function populatePeopleDirectory() {
+      const c = document.getElementById('facultyDirectoryContainer');
+      c.innerHTML = '';
+      FACULTY_DIRECTORY.forEach(m => {
+        const card = document.createElement('div');
+        card.className = "p-4 rounded-2xl bg-slate-50/70 border border-slate-200 flex items-center justify-between text-left";
+        card.innerHTML = `
+          <div>
+            <div class="font-bold text-sm text-slate-900">${m.name}</div>
+            <div class="text-xs text-slate-500 mt-0.5">${m.area}</div>
+          </div>
+          <span class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-white border border-slate-200 text-purple-700 shadow-sm">
+            ${m.role === 'HEAD' ? 'Leadership' : m.role === 'CO_FOUNDER' ? 'Co-founder' : m.role}
+          </span>
+        `;
+        c.appendChild(card);
+      });
+    }
+
+    // Ticker for Device Time, 5:50 Dinner, 9:00 Snack & Exam Countdown
+    function tickClockAndAlarms() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const day = now.getDay(); // 0 = Sun, 6 = Sat
+      const isWeekend = day === 0 || day === 6;
+      const dateKey = now.toISOString().slice(0, 10);
+
+      document.getElementById('modalDeviceTime').textContent = timeStr;
+      document.getElementById('modalDeviceZone').textContent = Intl.DateTimeFormat().resolvedOptions().timeZone || 'System Local';
+
+      if (!currentSession) return;
+
+      // 5:50 PM Dinner Alert
+      const dinnerKey = `${dateKey}_1750`;
+      if (hours === 17 && minutes === 50 && !alertedKeys[dinnerKey]) {
+        alertedKeys[dinnerKey] = true;
+        triggerAlarmModal("🍽️ Dinner in 10 Minutes", "6:00 PM is Dinner time! Dinner will begin in 10 minutes. Students and faculty are advised to proceed to the Dining Hall (DH).");
+      }
+
+      // 9:00 PM Evening Snack Alert
+      const snackKey = `${dateKey}_2100`;
+      if (hours === 21 && minutes === 0 && !alertedKeys[snackKey]) {
+        alertedKeys[snackKey] = true;
+        if (isWeekend) {
+          triggerAlarmModal("🥪 Evening Snack Time & Prep Ended", "Evening snack time. On weekends prep ends at 9:00pm. Prep has ended, students are advised to go and sleep immediately.");
+        } else {
+          triggerAlarmModal("🥪 Evening Snack Time", "Evening snack time. Students and staff are invited to have their evening snack.");
+        }
+      }
+
+      // 10:30 PM Weekday Prep Ended
+      const prepKey = `${dateKey}_2230`;
+      if (!isWeekend && hours === 22 && minutes === 30 && !alertedKeys[prepKey]) {
+        alertedKeys[prepKey] = true;
+        triggerAlarmModal("🌙 Prep Has Ended", "Prep has ended, students are advised to go and sleep immediately.");
+      }
+    }
+
+    function triggerAlarmModal(title, body) {
+      if (soundEnabled && typeof navigator !== 'undefined' && 'vibrate' in navigator) {
+        navigator.vibrate([200, 100, 200, 100, 400]);
+      }
+      document.getElementById('alertModalTitle').textContent = title;
+      document.getElementById('alertModalBody').textContent = body;
+      realtimeAlertModal.classList.remove('hidden');
+    }
+
+    document.getElementById('btnDismissAlert').addEventListener('click', () => {
+      realtimeAlertModal.classList.add('hidden');
+    });
+
+    // Phone modal controls
+    document.getElementById('btnOpenPhonePerms').addEventListener('click', () => {
+      phonePermsModal.classList.remove('hidden');
+    });
+    document.getElementById('btnClosePhoneModal').addEventListener('click', () => {
+      phonePermsModal.classList.add('hidden');
+    });
+    document.getElementById('btnDonePhoneModal').addEventListener('click', () => {
+      phonePermsModal.classList.add('hidden');
+    });
+    document.getElementById('btnSyncPhoneFromRoutine').addEventListener('click', () => {
+      phonePermsModal.classList.remove('hidden');
+    });
+
+    document.getElementById('btnGrantNotif').addEventListener('click', () => {
+      if ('Notification' in window) {
+        Notification.requestPermission().then(res => {
+          document.getElementById('modalNotifStatus').textContent = res.toUpperCase();
+          if (res === 'granted') {
+            alert('Phone notifications active! Your phone will alert you for meals and exams.');
+          }
+        });
+      }
+    });
+
+    document.getElementById('btnGrantMic').addEventListener('click', async () => {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          stream.getTracks().forEach(track => track.stop());
+          document.getElementById('modalMicStatus').textContent = 'GRANTED';
+          document.getElementById('modalMicStatus').className = 'text-[10px] font-bold px-2 py-0.5 rounded-full uppercase bg-emerald-100 text-emerald-800';
+          alert('Microphone permission granted! Voice announcements are now ready.');
+        } catch (err) {
+          document.getElementById('modalMicStatus').textContent = 'DENIED';
+          document.getElementById('modalMicStatus').className = 'text-[10px] font-bold px-2 py-0.5 rounded-full uppercase bg-rose-100 text-rose-800';
+          alert('Microphone access was denied. Please allow microphone in your browser settings.');
+        }
+      } else {
+        alert('Microphone recording is not supported in this browser.');
+      }
+    });
+
+    // Sound toggle
+    document.getElementById('btnToggleSound').addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      document.getElementById('soundText').textContent = soundEnabled ? "Audio On" : "Muted";
+    });
+
+    function showAuthAlert(msg, type) {
+      authAlertBanner.textContent = msg;
+      authAlertBanner.className = `p-3.5 rounded-2xl text-xs font-semibold mb-4 text-left ${type === 'bad' ? 'bg-rose-50 text-rose-800 border border-rose-200' : 'bg-emerald-50 text-emerald-800 border border-emerald-200'}`;
+      authAlertBanner.classList.remove('hidden');
+    }
+
+    // Run
+    init();
+  </script>
+</body>
+</html>

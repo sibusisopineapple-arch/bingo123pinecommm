@@ -1,0 +1,6 @@
+{
+  "name": "USAP Community School Platform",
+  "description": "Secure student and staff community platform for USAP Community School tests, announcements, and coordination.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

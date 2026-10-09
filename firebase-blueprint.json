@@ -1,0 +1,307 @@
+{
+  "entities": {
+    "userProfile": {
+      "title": "UserProfile",
+      "description": "User profile containing school role and class details",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 256 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "role": {
+          "type": "string",
+          "enum": ["STUDENT", "TEACHER", "TA", "HEAD", "ESTATE", "NON_FACULTY", "CO_FOUNDER", "IT_MANAGER"]
+        },
+        "schoolClass": {
+          "type": "string",
+          "enum": ["LOWER 6X", "LOWER 6Y", "UPPER 6X", "UPPER 6Y", "STAFF", "ALL"]
+        },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "updatedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "test": {
+      "title": "Test",
+      "description": "School test and examination schedule entry",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "maxLength": 200 },
+        "subject": {
+          "type": "string",
+          "enum": ["Biology", "Mathematics", "Physics", "Research Methods", "Computers", "Humanities", "Chemistry"]
+        },
+        "schoolClass": {
+          "type": "string",
+          "enum": ["LOWER 6X", "LOWER 6Y", "UPPER 6X", "UPPER 6Y"]
+        },
+        "room": {
+          "type": "string",
+          "enum": ["Library", "DH", "Music room", "Chemistry/Biology lab", "Physics lab"]
+        },
+        "testDate": { "type": "string", "maxLength": 20 },
+        "startTime": { "type": "string", "maxLength": 10 },
+        "endTime": { "type": "string", "maxLength": 10 },
+        "startsAt": { "type": "string", "maxLength": 64 },
+        "endsAt": { "type": "string", "maxLength": 64 },
+        "createdBy": { "type": "string", "maxLength": 128 },
+        "creatorUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["title", "subject", "schoolClass", "room", "testDate", "startTime", "endTime", "startsAt", "endsAt", "creatorUid"]
+    },
+    "announcement": {
+      "title": "Announcement",
+      "description": "Community school announcement that stays active for 5 days",
+      "type": "object",
+      "properties": {
+        "message": { "type": "string", "maxLength": 2000 },
+        "authorName": { "type": "string", "maxLength": 128 },
+        "authorRole": { "type": "string", "maxLength": 64 },
+        "authorUid": { "type": "string", "maxLength": 128 },
+        "imageUrl": { "type": "string" },
+        "imageCaption": { "type": "string", "maxLength": 200 },
+        "audioUrl": { "type": "string" },
+        "audioDuration": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "expiresAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["message", "authorName", "authorRole", "authorUid", "createdAt", "expiresAt"]
+    },
+    "auditLog": {
+      "title": "AuditLog",
+      "description": "IT Manager security and activity log for sign-ins, restricted attempts, sign-outs, student accounts, and posts",
+      "type": "object",
+      "properties": {
+        "timestamp": { "type": "string", "maxLength": 64 },
+        "eventType": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "maxLength": 32 },
+        "email": { "type": "string", "maxLength": 256 },
+        "name": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "maxLength": 64 },
+        "schoolClass": { "type": "string", "maxLength": 64 },
+        "reason": { "type": "string", "maxLength": 500 },
+        "details": { "type": "string", "maxLength": 1000 }
+      },
+      "required": ["timestamp", "eventType", "status", "email", "name", "role"]
+    },
+    "verificationCode": {
+      "title": "VerificationCode",
+      "description": "Student email verification record dispatched by SBURA THE QUESTION MAN",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 256 },
+        "code": { "type": "string", "maxLength": 10 },
+        "studentName": { "type": "string", "maxLength": 128 },
+        "studentClass": { "type": "string", "maxLength": 64 },
+        "sender": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "expiresAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["email", "code", "sender", "createdAt"]
+    },
+    "onlinePresence": {
+      "title": "OnlinePresence",
+      "description": "Real-time presence tracking for users active on the site",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "lastSeen": { "type": "string", "maxLength": 64 },
+        "isOnline": { "type": "boolean" },
+        "userName": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "maxLength": 64 },
+        "schoolClass": { "type": "string", "maxLength": 64 },
+        "email": { "type": "string", "maxLength": 256 },
+        "deviceType": { "type": "string", "maxLength": 32 },
+        "signedInAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "lastSeen", "isOnline"]
+    },
+    "announcementView": {
+      "title": "AnnouncementView",
+      "description": "Read receipts and viewership records for school announcements",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "announcementId": { "type": "string", "maxLength": 128 },
+        "announcementSnippet": { "type": "string", "maxLength": 200 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "maxLength": 256 },
+        "userName": { "type": "string", "maxLength": 128 },
+        "userRole": { "type": "string", "maxLength": 64 },
+        "schoolClass": { "type": "string", "maxLength": 64 },
+        "firstSeenAt": { "type": "string", "maxLength": 64 },
+        "lastSeenAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "announcementId", "userId", "userName", "firstSeenAt"]
+    },
+    "userCustomTone": {
+      "title": "UserCustomTone",
+      "description": "User uploaded custom alarm and ringtone audio files scoped to user account only",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "userId": { "type": "string", "maxLength": 128 },
+        "userEmail": { "type": "string", "maxLength": 256 },
+        "name": { "type": "string", "maxLength": 128 },
+        "fileName": { "type": "string", "maxLength": 256 },
+        "audioData": { "type": "string", "maxLength": 5000000 },
+        "fileSize": { "type": "number" },
+        "uploadedAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "userId", "name", "fileName", "audioData", "uploadedAt"]
+    },
+    "officeHour": {
+      "title": "OfficeHour",
+      "description": "Teacher scheduled office hours sessions and spreadsheet registrations",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "teacherName": { "type": "string", "maxLength": 128 },
+        "teacherUid": { "type": "string", "maxLength": 128 },
+        "teacherEmail": { "type": "string", "maxLength": 256 },
+        "subject": { "type": "string", "maxLength": 64 },
+        "targetClass": { "type": "string", "maxLength": 64 },
+        "date": { "type": "string", "maxLength": 32 },
+        "startTime": { "type": "string", "maxLength": 16 },
+        "endTime": { "type": "string", "maxLength": 16 },
+        "slotDurationMinutes": { "type": "number" },
+        "totalSlots": { "type": "number" },
+        "location": { "type": "string", "maxLength": 128 },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "slots": { "type": "array" },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "teacherName", "teacherUid", "subject", "targetClass", "date", "startTime", "endTime", "slotDurationMinutes", "totalSlots", "slots", "createdAt"]
+    },
+    "birthday": {
+      "title": "Birthday",
+      "description": "Upcoming birthdays of individuals in the USAP community, auto-deleted when day passes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 32 },
+        "role": { "type": "string", "maxLength": 64 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "createdBy": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "name", "date", "createdAt"]
+    },
+    "weeklyTimetable": {
+      "title": "WeeklyTimetable",
+      "description": "Monday to Friday weekly class timetable spreadsheet",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 128 },
+        "targetClass": { "type": "string", "maxLength": 64 },
+        "slots": { "type": "array" },
+        "updatedAt": { "type": "string", "maxLength": 64 },
+        "updatedBy": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "title", "slots", "updatedAt"]
+    },
+    "examTimetable": {
+      "title": "ExamTimetable",
+      "description": "Final AS and A2 / End of term exam timetable entry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 32 },
+        "time": { "type": "string", "maxLength": 32 },
+        "subject": { "type": "string", "maxLength": 64 },
+        "level": { "type": "string", "enum": ["AS", "A2"] },
+        "venue": { "type": "string", "enum": ["Watershed", "Local"] },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "date", "time", "subject", "level", "venue", "createdAt"]
+    },
+    "weeklyDuty": {
+      "title": "WeeklyDuty",
+      "description": "Weekly plates duty advisory groups schedule valid for one week",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "weekLabel": { "type": "string", "maxLength": 128 },
+        "weekStartDate": { "type": "string", "maxLength": 32 },
+        "days": { "type": "array" },
+        "updatedAt": { "type": "string", "maxLength": 64 },
+        "updatedBy": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "weekLabel", "days", "updatedAt"]
+    },
+    "convocationSpeaker": {
+      "title": "ConvocationSpeaker",
+      "description": "Wednesday convocation speaker announcement, valid for Wednesday only and auto-deleted once passed",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 32 },
+        "speakerName": { "type": "string", "maxLength": 128 },
+        "topic": { "type": "string", "maxLength": 256 },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "createdBy": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "date", "speakerName", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "userProfile",
+      "description": "Stores user profiles linked to their authenticated UID"
+    },
+    "/tests/{testId}": {
+      "schema": "test",
+      "description": "Stores all scheduled tests visible across devices"
+    },
+    "/announcements/{announcementId}": {
+      "schema": "announcement",
+      "description": "Stores community-wide announcements visible across devices"
+    },
+    "/audit_logs/{logId}": {
+      "schema": "auditLog",
+      "description": "Stores security sign-ins, restricted attempts, and activity logs visible to IT Manager account"
+    },
+    "/verification_codes/{emailId}": {
+      "schema": "verificationCode",
+      "description": "Stores pending student verification codes dispatched by SBURA THE QUESTION MAN"
+    },
+    "/online_presence/{presenceId}": {
+      "schema": "onlinePresence",
+      "description": "Stores real-time presence heartbeats for active site users"
+    },
+    "/announcement_views/{viewId}": {
+      "schema": "announcementView",
+      "description": "Stores individual user read receipts for announcements visible to the IT Manager"
+    },
+    "/user_custom_tones/{toneId}": {
+      "schema": "userCustomTone",
+      "description": "Stores custom alarm tones uploaded from device for individual user account"
+    },
+    "/office_hours/{officeHourId}": {
+      "schema": "officeHour",
+      "description": "Stores teacher office hours sessions and spreadsheet booking slots"
+    },
+    "/birthdays/{birthdayId}": {
+      "schema": "birthday",
+      "description": "Stores upcoming birthdays of community members"
+    },
+    "/weekly_timetables/{timetableId}": {
+      "schema": "weeklyTimetable",
+      "description": "Stores weekly class timetable spreadsheet"
+    },
+    "/exam_timetables/{examId}": {
+      "schema": "examTimetable",
+      "description": "Stores Final AS & A2 / End of Term exam timetable entries"
+    },
+    "/weekly_duties/{dutyId}": {
+      "schema": "weeklyDuty",
+      "description": "Stores weekly plates duty schedule for advisory groups"
+    },
+    "/convocation_speakers/{speakerId}": {
+      "schema": "convocationSpeaker",
+      "description": "Stores Wednesday convocation speakers"
+    }
+  }
+}

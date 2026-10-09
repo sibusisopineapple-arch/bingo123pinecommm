@@ -1,0 +1,134 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Health / connection test document
+    match /test/connection {
+      allow read: if true;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'email', 'role']) &&
+             data.keys().hasOnly(['uid', 'email', 'displayName', 'role', 'schoolClass', 'createdAt', 'updatedAt']) &&
+             data.uid == request.auth.uid &&
+             data.email is string && data.email.size() <= 256 &&
+             data.role in ['STUDENT', 'TEACHER', 'TA', 'HEAD', 'ESTATE', 'NON_FACULTY', 'CO_FOUNDER'];
+    }
+
+    function isValidTest(data) {
+      return data.keys().hasAll(['title', 'subject', 'schoolClass', 'room', 'testDate', 'startTime', 'endTime', 'startsAt', 'endsAt', 'creatorUid']) &&
+             data.creatorUid == request.auth.uid &&
+             data.title is string && data.title.size() <= 200 &&
+             data.subject in ['Biology', 'Mathematics', 'Physics', 'Research Methods', 'Computers', 'Humanities', 'Chemistry'] &&
+             data.schoolClass in ['LOWER 6X', 'LOWER 6Y', 'UPPER 6X', 'UPPER 6Y'] &&
+             data.room in ['Library', 'DH', 'Music room', 'Chemistry/Biology lab', 'Physics lab'];
+    }
+
+    function isValidAnnouncement(data) {
+      return data.keys().hasAll(['message', 'authorName', 'authorRole', 'authorUid', 'createdAt', 'expiresAt']) &&
+             data.authorUid == request.auth.uid &&
+             data.message is string && data.message.size() <= 2000;
+    }
+
+    // User profiles - visible to anyone who accesses the app on any device
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // School tests - stored online & visible to anyone accessing the app on any device
+    match /tests/{testId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Community announcements - stored online & visible to anyone accessing the app on any device
+    match /announcements/{announcementId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Security audit logs & activity tracking (for IT Manager account)
+    match /audit_logs/{logId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Student verification codes dispatched by SBURA THE QUESTION MAN
+    match /verification_codes/{emailId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Real-time online presence heartbeats
+    match /online_presence/{presenceId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Announcement viewership & read receipts tracking (for IT Manager sheet)
+    match /announcement_views/{viewId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // User custom uploaded alarm tones (scoped to user's account)
+    match /user_custom_tones/{toneId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Office Hours schedules and student slot registrations
+    match /office_hours/{officeHourId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Upcoming birthdays
+    match /birthdays/{birthdayId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Weekly class timetables (Mon - Fri spreadsheet)
+    match /weekly_timetables/{timetableId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Final AS and A2 / End of Term exam timetables
+    match /exam_timetables/{examId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Weekly plates duty advisory schedule
+    match /weekly_duties/{dutyId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Wednesday convocation speakers
+    match /convocation_speakers/{speakerId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

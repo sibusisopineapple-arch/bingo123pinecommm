@@ -1,0 +1,33 @@
+{
+  "id": "/",
+  "name": "USAP Community School Platform",
+  "short_name": "USAP School",
+  "description": "Secure community, test coordination, and background daily schedule reminders for USAP Community School.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#ffffff",
+  "theme_color": "#7c3aed",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='40' fill='%237c3aed'/><text x='96' y='125' text-anchor='middle' font-size='90' font-family='sans-serif' fill='white'>🍍</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='100' fill='%237c3aed'/><text x='256' y='330' text-anchor='middle' font-size='240' font-family='sans-serif' fill='white'>🍍</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%237c3aed'/><text x='256' y='330' text-anchor='middle' font-size='240' font-family='sans-serif' fill='white'>🍍</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}
